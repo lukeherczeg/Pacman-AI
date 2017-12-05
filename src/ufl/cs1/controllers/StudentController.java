@@ -49,7 +49,7 @@ public final class StudentController implements DefenderController
 			return lair(0);
 		}
 		else if (StudentController.this.currentGameState.getDefender(0).isVulnerable()){
-			return frightened();
+			return frightened(0);
 		}
 		else{
 			return chase(0);
@@ -57,7 +57,7 @@ public final class StudentController implements DefenderController
 	}
 	public int ghostTwoAction(long timeMs){
 		if (StudentController.this.currentGameState.getDefender(1).isVulnerable()){
-			return frightened();
+			return frightened(1);
 		}
 		else{
 			return chase(1);
@@ -65,7 +65,7 @@ public final class StudentController implements DefenderController
 	}
 	public int ghostThreeAction(long timeMs){
 		if (StudentController.this.currentGameState.getDefender(2).isVulnerable()){
-			return frightened();
+			return frightened(2);
 		}
 		else{
 			return chase(2);
@@ -73,7 +73,7 @@ public final class StudentController implements DefenderController
 	}
 	public int ghostFourAction(long timeMs){
 		if (StudentController.this.currentGameState.getDefender(3).isVulnerable()){
-			return frightened();
+			return frightened(3);
 		}
 		else{
 			return chase(3);
@@ -87,9 +87,9 @@ public final class StudentController implements DefenderController
 			return 0;
 	}
 	//frightened method
-	public int frightened(){
-
-
+	public int frightened(int ghostId){
+		if(StudentController.this.previousGameState.getAttacker().getLocation().isPowerPill() || StudentController.this.currentGameState.getDefender(ghostId).getVulnerableTime() > 0)
+			return 0;
 		return 2;
 	}
 	//chase method
@@ -107,7 +107,7 @@ public final class StudentController implements DefenderController
 		Defender defender = ghosts.get(ghostId);
 		List<Integer> possibleDirs = defender.getPossibleDirs();
 
-		int targetX = StudentController.this.currentGameState.getAttacker().getLocation().getY();
+		int targetX = StudentController.this.currentGameState.getAttacker().getLocation().getX();
 		int targetY = StudentController.this.currentGameState.getAttacker().getLocation().getY();
 		int ghostX = defenderLoc.getX();
 		int ghostY = defenderLoc.getY();
