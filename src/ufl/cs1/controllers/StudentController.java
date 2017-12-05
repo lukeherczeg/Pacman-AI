@@ -10,7 +10,7 @@ import java.util.List;
 public final class StudentController implements DefenderController
 {
 	Game currentGameState;
-	Game previosGamestate;
+	Game previousGameState;
 	public void init(Game game) { }
 
 	public void shutdown(Game game) { }
@@ -18,8 +18,8 @@ public final class StudentController implements DefenderController
 	public int[] update(Game game,long timeDue)
 	{
 		this.currentGameState = game;
-		if (this.previosGamestate == null){
-			this.previosGamestate = this.currentGameState;
+		if (this.previousGameState == null){
+			this.previousGameState = this.currentGameState;
 		}
 		int[] actions = new int[Game.NUM_DEFENDER];
 		List<Defender> enemies = game.getDefenders();
@@ -46,7 +46,7 @@ public final class StudentController implements DefenderController
 	//we have to make each one different, but i made all the same to start just becacuse
 	public int ghostOneAction(long timeMs){
 		if (StudentController.this.currentGameState.getDefender(0).getLocation().getY() == 0){
-			return lair();
+			return lair(0);
 		}
 		else if (StudentController.this.currentGameState.getDefender(0).isVulnerable()){
 			return frightened();
@@ -80,8 +80,11 @@ public final class StudentController implements DefenderController
 		}
 	}
 	//lair method
-	public int lair(){
-		return -1;
+	public int lair(int ghostId){
+		if (StudentController.this.currentGameState.getDefender(ghostId).getLairTime() > 0)
+			return -1;
+		else
+			return 0;
 	}
 	//frightened method
 	public int frightened(){
@@ -96,7 +99,7 @@ public final class StudentController implements DefenderController
 		Node defenderLoc = StudentController.this.currentGameState.getDefender(ghostId).getLocation();
 		int pacDirection = StudentController.this.currentGameState.getAttacker().getDirection();
 		if (target != null){
-			target = target.getNeighbor(pacDirection);
+			target.getNeighbor(pacDirection);
 		}
 		StudentController.this.currentGameState.getDefender(ghostId).getPossibleDirs();
 		Game game = this.currentGameState;
@@ -104,8 +107,8 @@ public final class StudentController implements DefenderController
 		Defender defender = ghosts.get(ghostId);
 		List<Integer> possibleDirs = defender.getPossibleDirs();
 
-		int targetX = target.getX();
-		int targetY = target.getY();
+		int targetX = StudentController.this.currentGameState.getAttacker().getLocation().getY();
+		int targetY = StudentController.this.currentGameState.getAttacker().getLocation().getY();
 		int ghostX = defenderLoc.getX();
 		int ghostY = defenderLoc.getY();
 		int diffx = targetX - ghostX;
