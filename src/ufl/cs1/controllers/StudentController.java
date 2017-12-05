@@ -1,5 +1,5 @@
 package ufl.cs1.controllers;
-
+// This is luke
 import game.controllers.DefenderController;
 import game.models.Defender;
 import game.models.Game;
@@ -84,12 +84,12 @@ public final class StudentController implements DefenderController
 		if (StudentController.this.currentGameState.getDefender(ghostId).getLairTime() > 0)
 			return -1;
 		else
-			return 0;
+			return 0; // this is moving upwards
 	}
 	//frightened method
 	public int frightened(int ghostId){
 		if(StudentController.this.previousGameState.getAttacker().getLocation().isPowerPill() || StudentController.this.currentGameState.getDefender(ghostId).getVulnerableTime() > 0)
-			return 0;
+			return 0; // some movement away from Pacman
 		return 2;
 	}
 	//chase method
@@ -111,22 +111,22 @@ public final class StudentController implements DefenderController
 		int targetY = StudentController.this.currentGameState.getAttacker().getLocation().getY();
 		int ghostX = defenderLoc.getX();
 		int ghostY = defenderLoc.getY();
-		int diffx = targetX - ghostX;
-		int diffy = targetY - ghostY;
-		System.out.println(diffx);
-		System.out.println(diffy);
+		int diffX = targetX - ghostX;
+		int diffY = targetY - ghostY;
+		//System.out.println(diffX);
+		//System.out.println(diffY);
 		//gets the next direction of the ghost based on the position of postition of pacman on a coordinate plane
 		//it will find the x and y distance between the pacman and ghost and decide where to go based on possible moves
-		if (diffx == 0){
-			if (diffy > 0){
+		if (diffX == 0){
+			if (diffY > 0){
 				direction = 0;
 			}
 			else{
 				direction = 2;
 			}
 		}
-		else if (diffy == 0){
-			if (diffx > 0){
+		else if (diffY == 0){
+			if (diffX > 0){
 				direction = 1;
 			}
 			else{
@@ -134,10 +134,10 @@ public final class StudentController implements DefenderController
 			}
 		}
 		else{
-			double ratio = diffy / diffx;
+			double ratio = diffY / diffX;
 			if (ratio > 0) {
 				//quadrant 1
-				if (diffx > 0) {
+				if (diffX > 0) {
 					if (ratio > 1) {
 						if (possibleDirs.contains(0)) {
 							direction = 0;
@@ -178,7 +178,7 @@ public final class StudentController implements DefenderController
 				}
 			} else {
 				//quadrant 4
-				if (diffx > 0) {
+				if (diffX > 0) {
 					if (ratio < -1) {
 						if (possibleDirs.contains(2)) {
 							direction = 2;
