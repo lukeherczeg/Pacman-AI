@@ -88,25 +88,28 @@ public final class StudentController implements DefenderController
 	}
 	//frightened method
 	public int frightened(int ghostId){
+		Node target = StudentController.this.currentGameState.getAttacker().getLocation();
 		if(StudentController.this.previousGameState.getAttacker().getLocation().isPowerPill() || StudentController.this.currentGameState.getDefender(ghostId).getVulnerableTime() > 0)
-			return 0; // some movement away from Pacman
+			return StudentController.this.currentGameState.getDefender(ghostId).getNextDir(target, false); // some movement away from Pacman
 		return 2;
 	}
 	//chase method
 	public int chase(int ghostId){
 		int direction = 0;
 		Node target = StudentController.this.currentGameState.getAttacker().getLocation();
+		int pacDir = StudentController.this.currentGameState.getAttacker().getDirection();
 		Node defenderLoc = StudentController.this.currentGameState.getDefender(ghostId).getLocation();
 		int pacDirection = StudentController.this.currentGameState.getAttacker().getDirection();
-		if (target != null){
-			target.getNeighbor(pacDirection);
-		}
 		StudentController.this.currentGameState.getDefender(ghostId).getPossibleDirs();
 		Game game = this.currentGameState;
 		List<Defender> ghosts = game.getDefenders();
 		Defender defender = ghosts.get(ghostId);
 		List<Integer> possibleDirs = defender.getPossibleDirs();
-
+		direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(target, true);
+		if (StudentController.this.currentGameState.getAttacker().getPossibleDirs(false).contains(pacDir)) {
+			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(target.getNeighbor(pacDir), true);
+		}
+		/*
 		int targetX = StudentController.this.currentGameState.getAttacker().getLocation().getX();
 		int targetY = StudentController.this.currentGameState.getAttacker().getLocation().getY();
 		int ghostX = defenderLoc.getX();
@@ -219,7 +222,7 @@ public final class StudentController implements DefenderController
 				}
 
 			}
-		}
+		}*/
 		return direction;
 
 
