@@ -11,8 +11,6 @@ package ufl.cs1.controllers;
 * Probably, put that code in the chase function, with an if statement for the ghost you want to affect (doesn't matter just let us know)
 * I have an example in chase()
 *
-* PROBLEM;; RESPAWNING IS ALL MESSED UP, I THINK LAIR STATE NEEDS TO COME BACK
-*
 *
  */
 import game.controllers.DefenderController;
@@ -55,7 +53,10 @@ public final class StudentController implements DefenderController
 	//methods for each individual ghost, one can be a repeat because we are three people and not four.
 	//we have to make each one different, but i made all the same to start just becacuse
 	private int ghostOneAction(long timeMs){
-		if (StudentController.this.currentGameState.getDefender(0).isVulnerable()){
+		if (StudentController.this.currentGameState.getDefender(0).getLocation().getY() == 0) {
+			return lair(0);
+		}
+		else if(StudentController.this.currentGameState.getDefender(0).isVulnerable()){
 			return frightened(0);
 		}
 		else{
@@ -99,7 +100,8 @@ public final class StudentController implements DefenderController
 	{
 		if(StudentController.this.currentGameState.getDefender(ghostId).getLairTime() > 0)
 			return neutral;
-		return up;
+		else
+			return up;
 	}
 
 	//chase method
