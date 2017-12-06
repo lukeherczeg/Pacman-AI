@@ -106,7 +106,7 @@ public final class StudentController implements DefenderController
 	}
 
 	//chase method
-	private int chase(int ghostId){
+	private int chase(int ghostId) {
 		int direction = neutral;
 
 		Node pacmanLast = StudentController.this.previousGameState.getAttacker().getLocation();
@@ -119,33 +119,29 @@ public final class StudentController implements DefenderController
 		List<Integer> possibleDirs = defender.getPossibleDirs();
 
 		if ((ghostId == 0 || ghostId == 1) && StudentController.this.currentGameState.getAttacker().getPossibleDirs(false).contains(pacDir)) {
-				direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman.getNeighbor(pacDir), true);
+			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman.getNeighbor(pacDir), true);
 		}                 // aims in front of pacman
 
-		if(ghostId == 2)   // aims behind pacman
+		if (ghostId == 2)   // aims behind pacman
 			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacmanLast, true);
 
-		if(ghostId == 3)  // aim straight at pacman
+		if (ghostId == 3)  // aim straight at pacman
 			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, true);
 
-		/*if(ghostId == 0 || ghostId == 1 || ghostId == 2) {
-			if (pacman.getNeighbor(pacDir).isPowerPill()) {
-				direction = StudentController.this.currentGameState.getDefender(0).getNextDir(pacman, false);
-			}}*/
+		if (ghostId == 0 || ghostId == 1 || ghostId == 2) {
+			List<Node> powerups = StudentController.this.currentGameState.getPowerPillList();
+			for (int i = 0; i < powerups.size(); i++) {
+				if (pacman.getPathDistance(powerups.get(i)) < 20) {
+					direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, false);
+				}
+			}
 		/*if(ghostId == 0)
 			System.out.println(pacman.getPathDistance(StudentController.this.currentGameState.getDefender(ghostId).getLocation()));*/
-
-		return direction;
-
-	}
-	//enum of states, havent used yet
-	enum states{
-		frightened,
-		lair,
-		chase;
-		private states(){
-
 		}
+			return direction;
+
+
+		//enum of states, havent used yet
 	}
 
 }
