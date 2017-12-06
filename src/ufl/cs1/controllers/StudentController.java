@@ -56,7 +56,7 @@ public final class StudentController implements DefenderController
 		if (StudentController.this.currentGameState.getDefender(0).getLocation().getY() == 0) {
 			return lair(0);
 		}
-		else if(StudentController.this.currentGameState.getDefender(0).isVulnerable()){
+		if(StudentController.this.currentGameState.getDefender(0).isVulnerable()){
 			return frightened(0);
 		}
 		else{
@@ -92,7 +92,8 @@ public final class StudentController implements DefenderController
 	private int frightened(int ghostId){
 		Node pacman = StudentController.this.currentGameState.getAttacker().getLocation();
 		if(StudentController.this.previousGameState.getAttacker().getLocation().isPowerPill() || StudentController.this.currentGameState.getDefender(ghostId).getVulnerableTime() > 0)
-			return StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, false); // some movement away from Pacman
+			if(pacman.getPathDistance(StudentController.this.currentGameState.getDefender(ghostId).getLocation()) < 30)  // tested between 0-100
+			return StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, false); // some movement away from pacman
 		return neutral;
 	}
 
@@ -118,8 +119,8 @@ public final class StudentController implements DefenderController
 		List<Integer> possibleDirs = defender.getPossibleDirs();
 
 		if ((ghostId == 0 || ghostId == 1) && StudentController.this.currentGameState.getAttacker().getPossibleDirs(false).contains(pacDir)) {
-			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman.getNeighbor(pacDir), true);
-		}                  // aims in front of pacman
+				direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman.getNeighbor(pacDir), true);
+		}                 // aims in front of pacman
 
 		if(ghostId == 2)   // aims behind pacman
 			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacmanLast, true);
