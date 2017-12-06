@@ -131,8 +131,8 @@ public final class StudentController implements DefenderController
 			if (pacman.getNeighbor(pacDir).isPowerPill()) {
 				direction = StudentController.this.currentGameState.getDefender(0).getNextDir(pacman, false);
 			}}*/
-		if(ghostId == 0)
-			System.out.println(pacman.getPathDistance(StudentController.this.currentGameState.getDefender(ghostId).getLocation()));
+		/*if(ghostId == 0)
+			System.out.println(pacman.getPathDistance(StudentController.this.currentGameState.getDefender(ghostId).getLocation()));*/
 
 		return direction;
 
