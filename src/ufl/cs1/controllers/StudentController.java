@@ -1,6 +1,8 @@
 package ufl.cs1.controllers;
 
 import game.controllers.DefenderController;
+import game.models.Attacker;
+import game.models.Defender;
 import game.models.Game;
 import game.models.Node;
 
@@ -83,38 +85,44 @@ public final class StudentController implements DefenderController
 
 	//frightened method for when powerpill is eaten. Once ghosts get far enough away, they will come back since they don't want to be too far to hunt him when the frightened state ends
 	private int frightened(int ghostId){
-		Node pacman = StudentController.this.currentGameState.getAttacker().getLocation();
-		if(StudentController.this.previousGameState.getAttacker().getLocation().isPowerPill() || StudentController.this.currentGameState.getDefender(ghostId).getVulnerableTime() > 0)
-			if (pacman.getPathDistance(StudentController.this.currentGameState.getDefender(ghostId).getLocation()) < 30)  // tested between 0-100
-				return StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, false); // some movement away from pacman\
+		Node pacmanLocation = StudentController.this.currentGameState.getAttacker().getLocation();
+		Defender ghost = StudentController.this.currentGameState.getDefender(ghostId);
+		Attacker pacman = StudentController.this.currentGameState.getAttacker();
+
+
+		if(pacmanLocation.isPowerPill() || ghost.getVulnerableTime() > 0)
+			if (pacmanLocation.getPathDistance(ghost.getLocation()) < 30)  // tested between 0-100
+				return ghost.getNextDir(pacmanLocation, false); // some movement away from pacman\
 			else
-				return StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, true);
+				return ghost.getNextDir(pacmanLocation, true);
 		return noAction;
 	}
 
 	//chase method
 	private int chase(int ghostId) {
 		int direction = noAction;
+		Defender ghost = StudentController.this.currentGameState.getDefender(ghostId);
+		Attacker pacman = StudentController.this.currentGameState.getAttacker();
+		List<Node> powerUps = StudentController.this.currentGameState.getPowerPillList();
 
-		Node pacmanLast = StudentController.this.previousGameState.getAttacker().getLocation();
-		Node pacman = StudentController.this.currentGameState.getAttacker().getLocation();
-		int pacDir = StudentController.this.currentGameState.getAttacker().getDirection();
+		Node pacmanLocationLast = StudentController.this.previousGameState.getAttacker().getLocation();
+		Node pacmanLocation = pacman.getLocation();
+		int pacDir = pacman.getDirection();
 
-		if ((ghostId == Blinky || ghostId == Pinky) && StudentController.this.currentGameState.getAttacker().getPossibleDirs(false).contains(pacDir)) {
-			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman.getNeighbor(pacDir), true);
+		if ((ghostId == Blinky || ghostId == Pinky) && pacman.getPossibleDirs(false).contains(pacDir)) {
+			direction = ghost.getNextDir(pacmanLocation.getNeighbor(pacDir), true);
 		}                 // aims in front of pacman
 
 		if (ghostId == Clyde)   // aims behind pacman
-			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacmanLast, true);
+			direction = ghost.getNextDir(pacmanLocationLast, true);
 
 		if (ghostId == Inky)  // aim straight at pacman
-			direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, true);
+			direction = ghost.getNextDir(pacmanLocation, true);
 
 		if (ghostId == Blinky || ghostId == Pinky || ghostId == Clyde) {    // makes all ghosts but 1 flee when pacman is close to a power pill, and one goes towards him to force him to eat it.
-			List<Node> powerups = StudentController.this.currentGameState.getPowerPillList();
-			for (int i = 0; i < powerups.size(); i++) {
-				if (pacman.getPathDistance(powerups.get(i)) < 20) {
-					direction = StudentController.this.currentGameState.getDefender(ghostId).getNextDir(pacman, false);
+			for (int i = 0; i < powerUps.size(); i++) {
+				if (pacmanLocation.getPathDistance(powerUps.get(i)) < 20) {
+					direction = ghost.getNextDir(pacmanLocation, false);
 				}
 			}
 		}
