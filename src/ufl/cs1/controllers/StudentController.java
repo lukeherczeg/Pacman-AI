@@ -26,7 +26,7 @@ public final class StudentController implements DefenderController
 	private final int Pinky = 1;
 	private final int Clyde = 2;
 	private final int Inky = 3;
-	
+
 	public void init(Game game) { }
 
 	public void shutdown(Game game) { }
@@ -39,47 +39,22 @@ public final class StudentController implements DefenderController
 		}
 		int[] actions = new int[Game.NUM_DEFENDER];
 
-		//gave the four ghosts individual methods and called them with this
-		actions[Blinky] = ghostOneAction(timeDue);
-		actions[Pinky] = ghostTwoAction(timeDue);
-		actions[Clyde] = ghostThreeAction(timeDue);
-		actions[Inky] = ghostFourAction(timeDue);
-
+		actions[Blinky] = ghostAction(Blinky);
+		actions[Pinky] = ghostAction(Pinky);
+		actions[Clyde] = ghostAction(Clyde);
+		actions[Inky] = ghostAction(Inky);
 		this.previousGameState = this.currentGameState;
 		return actions;
 	}
 	//methods for each individual ghost, one can be a repeat because we are three people and not four.
 	//we have to make each one different, but i made all the same to start just becacuse
-	private int ghostOneAction(long timeMs){
-		if(StudentController.this.currentGameState.getDefender(0).isVulnerable()){
-			return frightened(Blinky);
+
+	private int ghostAction(int ghostID){
+		if (StudentController.this.currentGameState.getDefender(ghostID).isVulnerable()){
+			return frightened(ghostID);
 		}
 		else{
-			return chase(Blinky);
-		}
-	}
-	private int ghostTwoAction(long timeMs){
-		if (StudentController.this.currentGameState.getDefender(1).isVulnerable()){
-			return frightened(Pinky);
-		}
-		else{
-			return chase(Pinky);
-		}
-	}
-	private int ghostThreeAction(long timeMs){
-		if (StudentController.this.currentGameState.getDefender(2).isVulnerable()){
-			return frightened(Clyde);
-		}
-		else{
-			return chase(Clyde);
-		}
-	}
-	private int ghostFourAction(long timeMs){
-		if (StudentController.this.currentGameState.getDefender(3).isVulnerable()){
-			return frightened(Inky);
-		}
-		else{
-			return chase(Inky);
+			return chase(ghostID);
 		}
 	}
 
@@ -87,8 +62,6 @@ public final class StudentController implements DefenderController
 	private int frightened(int ghostId){
 		Node pacmanLocation = StudentController.this.currentGameState.getAttacker().getLocation();
 		Defender ghost = StudentController.this.currentGameState.getDefender(ghostId);
-		Attacker pacman = StudentController.this.currentGameState.getAttacker();
-
 
 		if(pacmanLocation.isPowerPill() || ghost.getVulnerableTime() > 0)
 			if (pacmanLocation.getPathDistance(ghost.getLocation()) < 30)  // tested between 0-100
