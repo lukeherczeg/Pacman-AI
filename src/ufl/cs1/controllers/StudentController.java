@@ -83,7 +83,7 @@ public final class StudentController implements DefenderController
 
 		if (ghostId == Blinky || ghostId == Pinky || ghostId == Clyde) {    // makes all ghosts but one flee when pacman is close to a power pill, and one goes towards him to force him to eat it.
 			for (int i = 0; i < powerUps.size(); i++) {
-				if (pacmanLocation.getPathDistance(powerUps.get(i)) < 20) {
+				if (pacmanLocation.getPathDistance(powerUps.get(i)) < 10) {
 					direction = ghost.getNextDir(pacmanLocation, false);
 				}
 			}
