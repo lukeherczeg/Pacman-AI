@@ -54,8 +54,8 @@ public final class StudentController implements DefenderController
 		Node pacmanLocation = StudentController.this.currentGameState.getAttacker().getLocation();
 		Defender ghost = StudentController.this.currentGameState.getDefender(ghostId);
 
-		if(pacmanLocation.isPowerPill() || ghost.getVulnerableTime() > 0) // ternary operator for movement away from pacman if close, towards if far
-			return (pacmanLocation.getPathDistance(ghost.getLocation()) < 30) ? (ghost.getNextDir(pacmanLocation, false)) : (ghost.getNextDir(pacmanLocation, true));
+		if(ghost.getVulnerableTime() > 0) // ternary operator for movement away from pacman unless significantly far.
+			return (pacmanLocation.getPathDistance(ghost.getLocation()) < 90) ? (ghost.getNextDir(pacmanLocation, false)) : (ghost.getNextDir(pacmanLocation, true));
 
 		return noAction;
 	}
@@ -83,7 +83,7 @@ public final class StudentController implements DefenderController
 
 		if (ghostId == Blinky || ghostId == Pinky || ghostId == Clyde) {    // makes all ghosts but one flee when pacman is close to a power pill, and one goes towards him to force him to eat it.
 			for (int i = 0; i < powerUps.size(); i++) {
-				if (pacmanLocation.getPathDistance(powerUps.get(i)) < 10) {
+				if (pacmanLocation.getPathDistance(powerUps.get(i)) < 20) {
 					direction = ghost.getNextDir(pacmanLocation, false);
 				}
 			}
